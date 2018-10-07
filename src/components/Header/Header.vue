@@ -25,18 +25,27 @@
 			<span class="bulletin-text">{{this.seller.bulletin}}</span>
 			<i class="icon-keyboard_arrow_right icon-arrow"></i>
 		</div>
+		<div class="header-background">
+			<img :src="seller.avatar" alt="" width="100%">
+		</div>
+		<header-bulletin :seller="seller"></header-bulletin>
 	</div>
 </template>
 
 <script>
+import HeaderBulletin from './components/Bulletin';
+
 export default {
 	name: 'Header',
 	props: {
 		seller: Object,
 		require: true,
 	},
+	components: {
+		HeaderBulletin,
+	},
 	mounted() {
-		console.log(this.seller);
+
 	},
 	computed: {
 		iconImg() {
@@ -50,8 +59,11 @@ export default {
 @import '~@/assets/style/mixin.styl';
 
 #header
+	position relative
+	overflow hidden
 	color #fff
 	background-color rgba(7,17,27,.5)
+	font-weight 200
 	.header-top
 		position relative
 		overflow hidden
@@ -64,7 +76,6 @@ export default {
 			float left
 			margin-left .32rem
 			padding .04rem 0
-			font-weight 200
 			line-height .24rem
 			.title
 				.brand
@@ -118,5 +129,40 @@ export default {
 				.icon-arrow
 					vertical-align middle
 					font-size .2rem
+	.header-bottom
+		position relative
+		overflow hidden
+		height .56rem
+		line-height .56rem
+		padding 0 .24rem
+		background-color rgba(7,17,27,.2);
+		white-space nowrap
+		text-overflow ellipsis
+		.bulletin-title
+			display inline-block
+			width .44rem
+			height .24rem
+			vertical-align middle
+			bg-img('./assets/bulletin')
+			background-size .44rem .24rem
+			background-repeat no-repeat
+		.bulletin-text
+			margin 0 .08rem
+			font-size .2rem
+			vertical-align middle
+		.icon-arrow
+			position absolute
+			right .24rem
+			top 0
+			line-height .56rem
+			vertical-align middle
+	.header-background
+		position absolute
+		top 0
+		bottom 0
+		left 0
+		right 0
+		z-index -1
+		filter blur(10px)
 </style>
 
