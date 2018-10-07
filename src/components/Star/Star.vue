@@ -11,6 +11,11 @@
 </template>
 
 <script>
+
+const CLS_ON = 'on';
+const CLS_HALF = 'half';
+const CLS_OFF = 'off';
+
 export default {
 	name: 'star',
 	props: {
@@ -38,11 +43,11 @@ export default {
 			// eslint-disable-next-line no-plusplus
 			for (let i = 1; i <= this.total; i++) {
 				if (i <= this.score) {
-					result.push({ style: 'on' });
+					result.push({ style: CLS_ON });
 				} else if (i > this.score && i <= this.score + 0.5) {
-					result.push({ style: 'half' });
+					result.push({ style: CLS_HALF });
 				} else {
-					result.push({ style: 'off' });
+					result.push({ style: CLS_OFF });
 				}
 			}
 			return result;
