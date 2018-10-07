@@ -11,13 +11,19 @@
 				</p>
 				<p class="description">{{seller.description}} / {{seller.deliveryTime}}分钟送达</p>
 				<p class="support" v-if="seller.supports">
-					<span class="icon"></span>
+					<span :class="['icon', iconImg]"></span>
 					<span class="text">{{seller.supports[0].description}}</span>
 				</p>
+				<div class="support-number" v-if="seller.supports">
+					<span class="count">{{this.seller.supports.length}}个</span>
+					<i class="icon-keyboard_arrow_right icon-arrow"></i>
+				</div>
 			</div>
 		</div>
 		<div class="header-bottom">
-
+			<span class="bulletin-title"></span>
+			<span class="bulletin-text">{{this.seller.bulletin}}</span>
+			<i class="icon-keyboard_arrow_right icon-arrow"></i>
 		</div>
 	</div>
 </template>
@@ -32,6 +38,11 @@ export default {
 	mounted() {
 		console.log(this.seller);
 	},
+	computed: {
+		iconImg() {
+			return ['decrease', 'guaratee', 'guaratee', 'invoice', 'special'][this.seller.supports[0].type];
+		},
+	},
 };
 </script>
 
@@ -42,35 +53,70 @@ export default {
 	color #fff
 	background-color rgba(7,17,27,.5)
 	.header-top
+		position relative
 		overflow hidden
 		padding .48rem .24rem .36rem .48rem
 		.avatar
 			float left
+			img
+				border-radius 2px
 		.header-content
 			float left
 			margin-left .32rem
 			padding .04rem 0
 			font-weight 200
 			line-height .24rem
-			.brand
-				display inline-block
-				width .45rem
-				height .3rem
-				bg-img('./assets/brand')
-				background-size .45rem .3rem
-				background-repeat no-repeat
-				vertical-align middle
-			.seller-name
-				font-size .32rem
-				font-weight bold
-				line-height .36rem
-				vertical-align middle
+			.title
+				.brand
+					display inline-block
+					width .45rem
+					height .3rem
+					bg-img('./assets/brand')
+					background-size .45rem .3rem
+					background-repeat no-repeat
+					vertical-align middle
+				.seller-name
+					font-size .32rem
+					font-weight bold
+					line-height .36rem
+					vertical-align middle
 			.description
 				padding-top .16rem
 				padding-bottom .2rem
 				font-size .24rem
 			.support
+				.icon
+					display inline-block
+					width .24rem
+					height .24rem
+					margin-right .08rem
+					background-size .24rem .24rem
+					vertical-align middle
+					background-repeat no-repeat
+					&.decrease
+						bg-img('./assets/decrease_1')
+					&.discount
+						bg-img('./assets/discount_1')
+					&.guarantee
+						bg-img('./assets/guarantee_1')
+					&.invoice
+						bg-img('./assets/invoice_1')
+					&.special
+						bg-img('./assets/special_1')
+				.text
+					font-size .2rem
+					vertical-align middle
+			.support-number
+				position absolute
+				right .24rem
+				bottom .36rem
+				padding .14rem .16rem
+				border-radius .28rem
+				background-color rgba(0,0,0,.2)
+				vertical-align middle
 				font-size .2rem
-
+				.icon-arrow
+					vertical-align middle
+					font-size .2rem
 </style>
 
