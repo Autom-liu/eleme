@@ -36,7 +36,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="close">
+		<div class="close" @click="close">
 			<i class="icon-close"></i>
 		</div>
 	</div>
@@ -60,6 +60,11 @@ export default {
 			return ['decrease', 'guaratee', 'guaratee', 'invoice', 'special'][this.seller.supports.type];
 		},
 	},
+	methods: {
+		close() {
+			this.$emit('close');
+		},
+	},
 };
 </script>
 
@@ -67,9 +72,10 @@ export default {
 	#bulletin-detail
 		position fixed
 		top 0
-		bottom 0
 		left 0
 		right 0
+		bottom 0
+		overflow-y scroll
 		z-index 9
 		line-height 1
 		background-color rgba(7,17,27,.8)

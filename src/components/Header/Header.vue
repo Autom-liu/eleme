@@ -14,13 +14,13 @@
 					<span :class="['icon', iconImg]"></span>
 					<span class="text">{{seller.supports[0].description}}</span>
 				</p>
-				<div class="support-number" v-if="seller.supports">
+				<div @click="bulletinShow" class="support-number" v-if="seller.supports">
 					<span class="count">{{this.seller.supports.length}}个</span>
 					<i class="icon-keyboard_arrow_right icon-arrow"></i>
 				</div>
 			</div>
 		</div>
-		<div class="header-bottom">
+		<div class="header-bottom" @click="bulletinShow">
 			<span class="bulletin-title"></span>
 			<span class="bulletin-text">{{this.seller.bulletin}}</span>
 			<i class="icon-keyboard_arrow_right icon-arrow"></i>
@@ -28,7 +28,11 @@
 		<div class="header-background">
 			<img :src="seller.avatar" alt="" width="100%">
 		</div>
-		<header-bulletin :seller="seller"></header-bulletin>
+		<header-bulletin
+			:seller="seller"
+			v-show="bulletinLayer"
+			@close="bulletinClose"
+		></header-bulletin>
 	</div>
 </template>
 
@@ -43,6 +47,19 @@ export default {
 	},
 	components: {
 		HeaderBulletin,
+	},
+	data() {
+		return {
+			bulletinLayer: false,
+		};
+	},
+	methods: {
+		bulletinClose() {
+			this.bulletinLayer = false;
+		},
+		bulletinShow() {
+			this.bulletinLayer = true;
+		},
 	},
 	mounted() {
 
