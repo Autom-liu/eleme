@@ -1,5 +1,5 @@
 <template>
-	<li class="menu-item">
+	<li :class="['menu-item', activeStyle]" @click="stepIndex">
 		<div class="text-wrapper">
 			<span class="text"> <i class="icon"></i> {{menu.name}}</span>
 		</div>
@@ -11,6 +11,21 @@ export default {
 	name: 'MenuIcon',
 	props: {
 		menu: Object,
+		currentIndex: {
+			type: Number,
+			default: 0,
+		},
+		index: Number,
+	},
+	computed: {
+		activeStyle() {
+			return { active: this.currentIndex === this.index };
+		},
+	},
+	methods: {
+		stepIndex(e) {
+			this.$emit('step-index', this.index);
+		},
 	},
 };
 </script>

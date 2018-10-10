@@ -1,41 +1,46 @@
 <template>
 	<div id="Shopping">
-		<div class="menu-wrapper">
+		<div class="menu-wrapper" ref="menuScroll">
 			<ul>
 				<menu-item
 					v-for="(item, index) of goods"
 					:key="index"
 					:menu="item"
+					:index="index"
+					:currentIndex="currentIndex"
+					@step-index="stepIndex"
 				></menu-item>
 			</ul>
 		</div>
-		<div class="foods-wrapper">
-			<div class="food-list" v-for="(item, index) of goods" :key="index">
-				<h1 class="title">
-					{{item.name}}
-				</h1>
-				<ul>
-					<li class="food-item" v-for="(food, index) of item.foods" :key="index">
-						<div class="img-box">
-							<img :src="food.icon" alt="" class="food-img" width="100%">
-						</div>
-						<div class="content">
-							<h2 class="name">{{food.name}}</h2>
-							<p class="desc">{{food.description}}</p>
-							<div class="extra">
-								<span>月售{{food.sellCount}}</span>
-								<span>好评率{{food.rating}}%</span>
+		<div class="foods-wrapper" ref="foodScroll">
+			<div>
+				<div class="food-list" v-for="(item, index) of goods" :key="index">
+					<h1 class="title">
+						{{item.name}}
+					</h1>
+					<ul>
+						<li class="food-item" v-for="(food, index) of item.foods" :key="index">
+							<div class="img-box">
+								<img :src="food.icon" alt="" class="food-img" width="100%">
 							</div>
-							<div class="price">
-								<span class="new"><span class="symbol">￥</span>{{food.price}}</span>
-								<span class="old" v-show="food.oldPrice">
-									<span class="symbol">￥</span>
-									{{food.oldPrice}}
-								</span>
+							<div class="content">
+								<h2 class="name">{{food.name}}</h2>
+								<p class="desc">{{food.description}}</p>
+								<div class="extra">
+									<span>月售{{food.sellCount}}</span>
+									<span>好评率{{food.rating}}%</span>
+								</div>
+								<div class="price">
+									<span class="new"><span class="symbol">￥</span>{{food.price}}</span>
+									<span class="old" v-show="food.oldPrice">
+										<span class="symbol">￥</span>
+										{{food.oldPrice}}
+									</span>
+								</div>
 							</div>
-						</div>
-					</li>
-				</ul>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -43,6 +48,7 @@
 
 <script>
 import axios from 'axios';
+import BScroll from 'better-scroll';
 import MenuItem from './components/MenuItem';
 
 export default {
@@ -53,6 +59,8 @@ export default {
 	data() {
 		return {
 			goods: [],
+			elementHeight: [],
+			scrollY: 0,
 		};
 	},
 	mounted() {
@@ -68,9 +76,59 @@ export default {
 		handleData(goods) {
 			if (Array.isArray(goods)) {
 				this.goods = goods;
+				this.$nextTick(() => {
+					this.initScroll();
+					this.initHeight();
+				});
 			}
 		},
 		handleError(status) {
+
+		},
+		initScroll() {
+			this.menuScroll = new BScroll(this.$refs.menuScroll, {
+				click: true,
+			});
+			this.foodScroll = new BScroll(this.$refs.foodScroll, {
+				probeType: 3,
+			});
+			this.foodScroll.on('scroll', (pos) => {
+				this.scrollY = Math.abs(Math.round(pos.y));
+			});
+		},
+		initHeight() {
+			const eles = this.$refs.foodScroll.getElementsByClassName('food-list');
+			Array.prototype.forEach.call(eles, (ele, index) => {
+				this.elementHeight.push(ele.offsetTop);
+			});
+		},
+		stepIndex(index) {
+			this.currentIndex = index;
+			console.log(this.currentIndex);
+		},
+	},
+	computed: {
+		currentIndex: {
+			get() {
+				// eslint-disable-next-line no-plusplus
+				for (let i = 1; i <= this.elementHeight.length; i++) {
+					const minHeight = this.elementHeight[i - 1] * 0.9;
+					const maxHeight = this.elementHeight[i] * 0.9;
+					if ((this.scrollY >= minHeight && this.scrollY < maxHeight) || !maxHeight) {
+						return i - 1;
+					}
+				}
+				return 0;
+			},
+			set(i) {
+				const eles = this.$refs.foodScroll.getElementsByClassName('food-list');
+				this.foodScroll.scrollToElement(eles[i]);
+				this.scrollY = this.elementHeight[i];
+			},
+		},
+	},
+	watch: {
+		scrollY(val) {
 
 		},
 	},
@@ -79,11 +137,21 @@ export default {
 
 <style lang="stylus" scoped>
 #Shopping
+	position fixed
 	display flex
+	top 3.5rem
+	bottom 0
+	width 100%
+	overflow hidden
 	.menu-wrapper
 		width 1.6rem
+		height 100%
 	.foods-wrapper
+		position absolute
 		flex 1
+		left 1.6rem
+		top 0
+		bottom 0
 		.food-list
 			.title
 				padding-left .28rem
