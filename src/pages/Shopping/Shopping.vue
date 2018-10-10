@@ -104,7 +104,6 @@ export default {
 		},
 		stepIndex(index) {
 			this.currentIndex = index;
-			console.log(this.currentIndex);
 		},
 	},
 	computed: {
