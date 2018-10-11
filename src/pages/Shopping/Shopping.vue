@@ -43,48 +43,43 @@
 				</div>
 			</div>
 		</div>
+		<shop-cart></shop-cart>
 	</div>
 </template>
 
 <script>
 import axios from 'axios';
 import BScroll from 'better-scroll';
+import ShopCart from '@/components/ShopCart/ShopCart';
 import MenuItem from './components/MenuItem';
 
 export default {
 	name: 'Shopping',
 	components: {
 		MenuItem,
+		ShopCart,
+	},
+	props: {
+		goods: {
+			type: Array,
+			required: true,
+		},
+		seller: {
+			type: Object,
+			required: true,
+		},
 	},
 	data() {
 		return {
-			goods: [],
 			elementHeight: [],
 			scrollY: 0,
 		};
 	},
 	mounted() {
-		this.getGoodsData();
+		this.initScroll();
+		this.initHeight();
 	},
 	methods: {
-		getGoodsData() {
-			axios.get('api/goods.json')
-				.then(res => (res.status === 200 ? res.data : this.handleError(res.status)))
-				.then(data => (data.status === 200 ? data.goods : this.handleError(data.status)))
-				.then(goods => this.handleData(goods));
-		},
-		handleData(goods) {
-			if (Array.isArray(goods)) {
-				this.goods = goods;
-				this.$nextTick(() => {
-					this.initScroll();
-					this.initHeight();
-				});
-			}
-		},
-		handleError(status) {
-
-		},
 		initScroll() {
 			this.menuScroll = new BScroll(this.$refs.menuScroll, {
 				click: true,
@@ -139,7 +134,7 @@ export default {
 	position fixed
 	display flex
 	top 3.5rem
-	bottom 0
+	bottom 1rem
 	width 100%
 	overflow hidden
 	.menu-wrapper
