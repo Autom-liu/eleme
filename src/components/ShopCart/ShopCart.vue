@@ -1,6 +1,6 @@
 <template>
 	<div id="shop-cart">
-		<div class="cart-left active">
+		<div class="cart-left">
 			<div class="icon-wrapper">
 				<div class="icon-content">
 					<div class="icon-box">
@@ -12,10 +12,10 @@
 				</div>
 			</div>
 			<div class="price">￥0</div>
-			<div class="others">另需配送费￥4元</div>
+			<div class="others">另需配送费￥{{deliveryPrice}}元</div>
 		</div>
-		<div class="cart-right active">
-			￥20起送
+		<div class="cart-right">
+			￥{{minPrice}}起送
 		</div>
 	</div>
 </template>
@@ -23,6 +23,10 @@
 <script>
 export default {
 	name: 'shopCart',
+	props: {
+		deliveryPrice: Number,
+		minPrice: Number,
+	},
 };
 </script>
 

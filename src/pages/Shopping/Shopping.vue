@@ -43,12 +43,11 @@
 				</div>
 			</div>
 		</div>
-		<shop-cart></shop-cart>
+		<shop-cart :min-price="seller.minPrice" :delivery-price="seller.deliveryPrice"></shop-cart>
 	</div>
 </template>
 
 <script>
-import axios from 'axios';
 import BScroll from 'better-scroll';
 import ShopCart from '@/components/ShopCart/ShopCart';
 import MenuItem from './components/MenuItem';
