@@ -19,7 +19,7 @@
 						{{item.name}}
 					</h1>
 					<ul>
-						<food-item v-for="(food, index) of item.foods" :key="index" :food="food"></food-item>
+						<food-item v-for="food of item.foods" :key="food.id" :food="food"></food-item>
 					</ul>
 				</div>
 			</div>
@@ -69,6 +69,7 @@ export default {
 				click: true,
 			});
 			this.foodScroll = new BScroll(this.$refs.foodScroll, {
+				click: true,
 				probeType: 3,
 			});
 			this.foodScroll.on('scroll', (pos) => {

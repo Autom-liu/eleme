@@ -1,14 +1,25 @@
 <template>
 	<div id="cart-control">
-		<div class="cart-decrease icon-remove_circle_outline"></div>
-		<div class="cart-count">1</div>
-		<div class="add icon-add_circle"></div>
+		<div class="cart-decrease icon-remove_circle_outline" v-show="count>0" @click="subCount"></div>
+		<div class="cart-count" v-show="count>0">{{count}}</div>
+		<div class="add icon-add_circle" @click="addCount"></div>
 	</div>
 </template>
 
 <script>
 export default {
 	name: 'cartControl',
+	props: {
+		count: Number,
+	},
+	methods: {
+		addCount() {
+			this.$emit('actions', 'add');
+		},
+		subCount() {
+			this.$emit('actions', 'sub');
+		},
+	},
 };
 </script>
 

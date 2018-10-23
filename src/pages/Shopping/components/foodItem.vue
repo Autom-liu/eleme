@@ -19,12 +19,13 @@
 			</div>
 		</div>
 		<div class="control-wrapper">
-			<cart-control :food="food"></cart-control>
+			<cart-control :count="count" @actions="actions"></cart-control>
 		</div>
 	</li>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import CartControl from '@/components/cartcontrol/cartcontrol';
 export default {
 	name: 'FoodItem',
@@ -33,6 +34,22 @@ export default {
 	},
 	components: {
 		CartControl,
+	},
+	computed: {
+		count() {
+			return this.foods.filter(food => food.id === this.food.id)[0].count;
+		},
+		...mapState(['foods']),
+	},
+	methods: {
+		actions(type) {
+			switch (type) {
+				case 'add': this.addFood(this.food); break;
+				case 'sub': this.subFood(this.food); break;
+				default: break;
+			}
+		},
+		...mapActions(['addFood', 'subFood']),
 	},
 };
 </script>
