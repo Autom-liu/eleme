@@ -12,18 +12,22 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
 	name: 'cartControl',
 	props: {
 		count: Number,
 	},
 	methods: {
-		addCount() {
+		addCount(e) {
 			this.$emit('actions', 'add');
+			this.setRect(e.target.getBoundingClientRect());
 		},
 		subCount() {
 			this.$emit('actions', 'sub');
 		},
+		...mapActions(['setRect']),
 	},
 };
 </script>

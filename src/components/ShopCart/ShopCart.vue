@@ -17,15 +17,76 @@
 		<div class="cart-right">
 			￥{{minPrice}}起送
 		</div>
+		<div class="ball-container">
+			<transition
+				name="drop"
+				v-for="(ball, index) of ballsStatus"
+				:key="index"
+				@before-enter="beforeEnter"
+				@enter="enter"
+				@after-enter="afterEnter"
+			>
+				<div class="ball" v-if="ball.show">
+					<div class="inner inner-hook"></div>
+				</div>
+			</transition>
+		</div>
 	</div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
 	name: 'shopCart',
 	props: {
 		deliveryPrice: Number,
 		minPrice: Number,
+	},
+	data() {
+		return {
+			ballsStatus: [
+			],
+			animateQueue: [],
+		};
+	},
+	methods: {
+		beforeEnter(el) {
+			const x = this.startpos.left - 24;
+			const y = -(document.documentElement.clientHeight - this.startpos.y - 32);
+			const inner = el.getElementsByClassName('inner-hook')[0];
+			el.style.transform = `translate3d(0, ${y}px, 0)`;
+			el.style.webkitTransform = `translate3d(0, ${y}px, 0)`;
+			inner.style.transform = `translate3d(${x}px, 0, 0)`;
+			inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`;
+		},
+		enter(el, done) {
+			const inner = el.getElementsByClassName('inner-hook')[0];
+			this.$nextTick(() => {
+				el.style.transform = 'translate3d(0, 0, 0)';
+				el.style.webkitTransform = 'translate3d(0, 0, 0)';
+				inner.style.transform = 'translate3d(0, 0, 0)';
+				inner.style.webkitTransform = 'translate3d(0, 0, 0)';
+				done();
+			});
+		},
+		afterEnter(el) {
+			const index = this.animateQueue.shift();
+			this.ballsStatus[index].show = false;
+		},
+	},
+	computed: {
+		...mapState(['startpos']),
+	},
+	watch: {
+		startpos(val) {
+			const ball = { show: false };
+			this.ballsStatus.push(ball);
+			this.animateQueue.push(this.ballsStatus.length - 1);
+			this.$nextTick(() => {
+				this.ballsStatus[this.ballsStatus.length - 1].show = true;
+			});
+		},
 	},
 };
 </script>
@@ -114,6 +175,18 @@ export default {
 		&.active
 			color #fff
 			background-color #00b43c
+	.ball-container
+		.ball
+			position fixed
+			bottom .64rem
+			left .48rem
+			z-index 200
+			transition transform 1s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+			.inner
+				padding .16rem
+				background-color rgb(0, 160, 220)
+				border-radius 50%
+				transition transform 1s linear
 
 </style>
 
