@@ -24,11 +24,16 @@
 				</div>
 			</div>
 		</div>
-		<shop-cart :min-price="seller.minPrice" :delivery-price="seller.deliveryPrice"></shop-cart>
+		<shop-cart
+			:min-price="seller.minPrice"
+			:delivery-price="seller.deliveryPrice"
+			:selected="selectedFoods"
+		></shop-cart>
 	</div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import BScroll from 'better-scroll';
 import ShopCart from '@/components/ShopCart/ShopCart';
 import MenuItem from './components/MenuItem';
@@ -105,6 +110,10 @@ export default {
 				this.scrollY = this.elementHeight[i];
 			},
 		},
+		selectedFoods() {
+			return this.foods.filter(food => food.count > 0);
+		},
+		...mapState(['foods']),
 	},
 	watch: {
 		scrollY(val) {

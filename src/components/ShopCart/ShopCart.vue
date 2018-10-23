@@ -1,21 +1,21 @@
 <template>
 	<div id="shop-cart">
-		<div class="cart-left">
+		<div :class="['cart-left', highlight]">
 			<div class="icon-wrapper">
 				<div class="icon-content">
 					<div class="icon-box">
 						<i class="icon-shopping_cart"></i>
 					</div>
 				</div>
-				<div class="num-tag">
-					<span>99</span>
+				<div class="num-tag" v-show="total>0">
+					<span>{{total}}</span>
 				</div>
 			</div>
-			<div class="price">￥0</div>
+			<div class="price">￥{{totalPrice}}</div>
 			<div class="others">另需配送费￥{{deliveryPrice}}元</div>
 		</div>
-		<div class="cart-right">
-			￥{{minPrice}}起送
+		<div :class="['cart-right', account.style]">
+			{{account.text}}
 		</div>
 		<div class="ball-container">
 			<transition
@@ -42,6 +42,7 @@ export default {
 	props: {
 		deliveryPrice: Number,
 		minPrice: Number,
+		selected: Array,
 	},
 	data() {
 		return {
@@ -76,7 +77,29 @@ export default {
 		},
 	},
 	computed: {
+		total() {
+			return this.selected.reduce((a, b) => a + b.count, 0);
+		},
+		totalPrice() {
+			// eslint-disable-next-line no-mixed-operators
+			return this.selected.reduce((a, b) => a + b.count * b.price, 0);
+		},
 		...mapState(['startpos']),
+		highlight() {
+			return {
+				active: this.totalPrice > 0,
+			};
+		},
+		account() {
+			switch (true) {
+				case this.totalPrice >= this.minPrice:
+					return { style: 'active', text: '去结算' };
+				case this.totalPrice === 0:
+					return { style: '', text: `满￥${this.minPrice}起送` };
+				default:
+					return { style: '', text: `还差￥${this.minPrice - this.totalPrice}起送` };
+			}
+		},
 	},
 	watch: {
 		startpos(val) {
