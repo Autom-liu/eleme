@@ -15,6 +15,9 @@ const foodAction = {
 	subFood(ctx, food) {
 		ctx.commit('subFood', food.id);
 	},
+	clearFood(ctx) {
+		ctx.commit('clearFood');
+	},
 };
 
 const foodMutations = {
@@ -31,6 +34,10 @@ const foodMutations = {
 	},
 	subFood(state, id) {
 		state.foods = state.foods.map(f => (f.id === id ? { ...f, count: f.count - 1 } : f));
+	},
+	clearFood(state) {
+		// eslint-disable-next-line arrow-body-style
+		state.foods = state.foods.map(f => ({ ...f, count: 0 }));
 	},
 };
 

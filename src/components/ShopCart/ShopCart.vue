@@ -1,6 +1,6 @@
 <template>
 	<div id="shop-cart">
-		<div :class="['cart-left', highlight]">
+		<div :class="['cart-left', highlight]" @click="toggleFold">
 			<div class="icon-wrapper">
 				<div class="icon-content">
 					<div class="icon-box">
@@ -31,11 +31,26 @@
 				</div>
 			</transition>
 		</div>
+		<transition name="fold">
+			<div class="cart-list" v-show="listShow">
+				<div class="list-header">
+					<h1 class="title">购物车</h1>
+					<span class="empty" @click="clear">清空</span>
+				</div>
+				<div class="list-content" ref="listContent">
+					<ul>
+						<food-item v-for="food of selected" :key="food.id" :food="food"></food-item>
+					</ul>
+				</div>
+			</div>
+		</transition>
 	</div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
+import BScroll from 'better-scroll';
+import FoodItem from './components/foodItem';
 
 export default {
 	name: 'shopCart',
@@ -44,11 +59,15 @@ export default {
 		minPrice: Number,
 		selected: Array,
 	},
+	components: {
+		FoodItem,
+	},
 	data() {
 		return {
 			ballsStatus: [
 			],
 			animateQueue: [],
+			listShow: false,
 		};
 	},
 	methods: {
@@ -75,6 +94,22 @@ export default {
 			const index = this.animateQueue.shift();
 			this.ballsStatus[index].show = false;
 		},
+		toggleFold() {
+			if (this.total > 0) {
+				this.listShow = !this.listShow;
+			}
+			if (this.listShow) {
+				this.$nextTick(() => {
+					this.scroll = new BScroll(this.$refs.listContent, {
+						click: true,
+					});
+				});
+			}
+		},
+		clear() {
+			this.clearFood();
+		},
+		...mapActions(['clearFood']),
 	},
 	computed: {
 		total() {
@@ -109,6 +144,11 @@ export default {
 			this.$nextTick(() => {
 				this.ballsStatus[this.ballsStatus.length - 1].show = true;
 			});
+		},
+		total(val) {
+			if (val === 0) {
+				this.listShow = false;
+			}
 		},
 	},
 };
@@ -210,6 +250,35 @@ export default {
 				background-color rgb(0, 160, 220)
 				border-radius 50%
 				transition transform 1s linear
-
+	.cart-list
+		position absolute
+		left 0
+		top 0
+		z-index -1
+		width 100%
+		transform translate3d(0, -100%, 0)
+		transition transform .5s
+		&.fold-enter,&.fold-leave-to
+			transform translate3d(0, 0, 0)
+		.list-header
+			padding 0 .36rem
+			height .8rem
+			line-height .8rem
+			background-color #f3f5f7
+			border-bottom 1px solid rgba(7, 17, 27, .1)
+			.title
+				float left
+				font-size .28rem
+				font-weight 200
+				color rgb(7, 17, 27)
+			.empty
+				float right
+				font-size .24rem
+				color rgb(0, 160, 220)
+		.list-content
+			padding 0 .36rem .28rem
+			overflow hidden
+			max-height 4.34rem
+			background-color #fff
 </style>
 

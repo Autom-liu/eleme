@@ -21,10 +21,12 @@ export default {
 	},
 	methods: {
 		addCount(e) {
+			e.stopPropagation();
 			this.$emit('actions', 'add');
 			this.setRect(e.target.getBoundingClientRect());
 		},
-		subCount() {
+		subCount(e) {
+			e.stopPropagation();
 			this.$emit('actions', 'sub');
 		},
 		...mapActions(['setRect']),
