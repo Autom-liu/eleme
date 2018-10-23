@@ -8,6 +8,7 @@
 
 <script>
 import axios from 'axios';
+import { mapActions } from 'vuex';
 import AppHeader from '@/components/Header/Header';
 import NavTab from '@/components/NavTab/NavTab';
 
@@ -34,10 +35,12 @@ export default {
 			this.goods = data.goods;
 			this.ratings = data.ratings;
 			this.seller = data.seller;
+			this.initFoods(this.goods);
 		},
 		handleError() {
 
 		},
+		...mapActions(['initFoods']),
 	},
 };
 </script>
