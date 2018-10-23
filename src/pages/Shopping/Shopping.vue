@@ -75,8 +75,10 @@ export default {
 		};
 	},
 	mounted() {
-		this.initScroll();
-		this.initHeight();
+		setTimeout(() => {
+			this.initScroll();
+			this.initHeight();
+		});
 	},
 	methods: {
 		initScroll() {
