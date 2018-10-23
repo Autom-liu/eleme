@@ -4,10 +4,16 @@
 			<div
 				class="cart-decrease icon-remove_circle_outline"
 				v-show="count>0"
-				@click="subCount"></div>
+				@click="subCount"
+			>
+			</div>
 		</transition>
 		<div class="cart-count" v-show="count>0">{{count}}</div>
-		<div class="add icon-add_circle" @click="addCount"></div>
+		<div class="add icon-add_circle" @click="addCount">
+			<transition name="ball">
+				<span v-show="ballShow" class="ball"></span>
+			</transition>
+		</div>
 	</div>
 </template>
 
@@ -16,10 +22,23 @@ export default {
 	name: 'cartControl',
 	props: {
 		count: Number,
+		max: {
+			type: Number,
+			default: 1,
+		},
+	},
+	data() {
+		return {
+			ballShow: false,
+		};
 	},
 	methods: {
-		addCount() {
-			this.$emit('actions', 'add');
+		addCount(e) {
+			if (this.count < this.max) {
+				this.ballShow = true;
+				setTimeout(() => { this.ballShow = false; }, 6000);
+				this.$emit('actions', 'add');
+			}
 		},
 		subCount() {
 			this.$emit('actions', 'sub');
@@ -46,10 +65,34 @@ export default {
 		&.move-enter,&.move-leave
 			opacity 0
 			transform translate3d(.48rem, 0, 0) rotateZ(180deg)
+	.add
+		position relative
+		.ball
+			position absolute
+			top 0
+			left 0
+			padding .24rem
+			border-radius 50%
+			background-color rgb(0, 160, 220)
+			&.ball-enter-active
+				animation ball-drop 6s
 	.cart-count
 		width .48rem
 		font-size .2rem
 		color rgb(147, 153, 159)
 		text-align center
+
+@keyframes ball-drop {
+	0% {
+		transform: translate3d(0, 0, 0)
+	}
+	20% {
+		transform: translate3d(-.48rem, -.48rem 0)
+	}
+	100% {
+		transform: translate3d(1.28rem, 1.28rem 0)
+	}
+}
+
 </style>
 
