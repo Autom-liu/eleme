@@ -38,6 +38,9 @@
 									</span>
 								</div>
 							</div>
+							<div class="control-wrapper">
+								<cart-control></cart-control>
+							</div>
 						</li>
 					</ul>
 				</div>
@@ -50,6 +53,7 @@
 <script>
 import BScroll from 'better-scroll';
 import ShopCart from '@/components/ShopCart/ShopCart';
+import CartControl from '@/components/cartcontrol/cartcontrol';
 import MenuItem from './components/MenuItem';
 
 export default {
@@ -57,6 +61,7 @@ export default {
 	components: {
 		MenuItem,
 		ShopCart,
+		CartControl,
 	},
 	props: {
 		goods: {
@@ -157,6 +162,7 @@ export default {
 				font-size .24rem
 				color rgb(147, 153, 159)
 			.food-item
+				position relative
 				display flex
 				margin .36rem
 				.img-box
@@ -194,5 +200,9 @@ export default {
 							color rgb(240, 20, 20)
 						.old
 							text-decoration line-through
+				.control-wrapper
+					position absolute
+					bottom 0
+					right .36rem
 </style>
 
