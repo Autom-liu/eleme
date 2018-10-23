@@ -83,6 +83,7 @@ export default {
 		setTimeout(() => {
 			this.initScroll();
 			this.initHeight();
+			console.log(this.foods);
 		});
 	},
 	methods: {
@@ -125,6 +126,14 @@ export default {
 				this.foodScroll.scrollToElement(eles[i]);
 				this.scrollY = this.elementHeight[i];
 			},
+		},
+		foods() {
+			let ret = [];
+			this.goods.forEach((good) => {
+				// eslint-disable-next-line arrow-body-style
+				ret = ret.concat(good.foods.map((food => ({ ...food, count: 0 }))));
+			});
+			return ret;
 		},
 	},
 	watch: {
