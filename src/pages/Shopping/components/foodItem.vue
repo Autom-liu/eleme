@@ -97,7 +97,7 @@ export default {
 				text-decoration line-through
 	.control-wrapper
 		position absolute
-		bottom 0
+		bottom .16rem
 		right .36rem
 </style>
 
